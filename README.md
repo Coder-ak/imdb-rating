@@ -52,7 +52,7 @@ pm2 start ecosystem.config.js
 
 - **Get Rating by IMDb ID**: `GET /api/v1/rating/:id`
   - Example: `GET /api/v1/rating/tt0111161`
-  - Response: `{"id":"tt0111161","rating":9.3,"votes":2345678}`
+  - Response: `{"id":"tt0111161","rating":9.3}`
 
 ### Manual Data Import
 
