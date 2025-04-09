@@ -29,6 +29,10 @@ app.use(express.json());
 // Routes
 app.use("/api/v1", apiRoutes);
 
+app.use((req, res) => {
+  res.status(404).json({ error: "Invalid API path" });
+});
+
 // Error handling middleware
 app.use(
   (
