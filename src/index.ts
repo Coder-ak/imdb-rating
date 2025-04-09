@@ -19,6 +19,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const PROJECT_ROOT = process.cwd();
 
+app.set("trust proxy", true);
+
 // Middleware
 app.use(cors());
 app.use(compression());
