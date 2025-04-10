@@ -13,8 +13,8 @@ A TypeScript-based API service that provides IMDb ratings through a simple endpo
 ## Installation
 
 ```bash
-# Clone the repository (if using Git)
-git clone <repository-url>
+# Clone the repository
+git clone https://github.com/Coder-ak/imdb-rating.git
 cd imdb-rating
 
 # Install dependencies
