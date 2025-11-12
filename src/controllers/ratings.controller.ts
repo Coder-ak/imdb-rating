@@ -1,6 +1,15 @@
 import { Request, Response } from "express";
+import fs from "fs-extra";
+import path from "path";
+import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
 import { getDatabase } from "../db/db.js";
+
+dotenv.config();
+
+const PROJECT_ROOT = process.cwd();
+const DATA_DIR = path.join(PROJECT_ROOT, "db");
+const HEALTH_FILE = path.join(DATA_DIR, "health.json");
 
 interface IMDBRating {
   id: string;
