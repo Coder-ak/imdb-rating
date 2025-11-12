@@ -79,7 +79,6 @@ export function getHealth(req: Request, res: Response): void {
       appUptime: process.uptime(), // seconds
       nodeVersion: process.version,
       memoryUsage: process.memoryUsage(),
-      totalRecords,
       ...(meta && {
         lastUpdated: meta.lastUpdated,
         lastRecordCount: meta.recordCount,
