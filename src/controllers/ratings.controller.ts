@@ -55,3 +55,33 @@ export async function getRatingById(
     });
   }
 }
+
+export function getHealth(req: Request, res: Response): void {
+ try {
+       // Read persisted metadata
+    let meta: { lastUpdated: string; recordCount: number } | null = null;
+    if (fs.existsSync(HEALTH_FILE)) {
+      const raw = fs.readFileSync(HEALTH_FILE, "utf-8");
+      meta = JSON.parse(raw);
+    }
+
+    const health = {
+      status: "ok",
+      appUptime: process.uptime(), // seconds
+      nodeVersion: process.version,
+      memoryUsage: process.memoryUsage(),
+      totalRecords,
+      ...(meta && {
+        lastUpdated: meta.lastUpdated,
+        lastRecordCount: meta.recordCount,
+      }),
+    };
+
+    res.status(StatusCodes.OK).json(health);
+  } catch (error) {
+    console.error("[health] error:", (error as Error).message);
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: "Health check failed" });
+  }
+}

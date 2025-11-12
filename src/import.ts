@@ -16,8 +16,9 @@ const RATINGS_URL = process.env.RATINGS_URL;
 const LAST_MODIFIED_FILE = path.join(UPLOAD_DIR, "last-modified.txt");
 const COMPRESSED_FILE_PATH = path.join(UPLOAD_DIR, "title.ratings.tsv.gz");
 const EXTRACTED_FILE_PATH = path.join(UPLOAD_DIR, "title.ratings.tsv");
+const HEALTH_FILE = path.join(DATA_DIR, "health.json");
 
-export async function importRatings(): Promise<void> {
+export async function importRatings(): Promise<number> {
   try {
     // Ensure data directory exists
     await fs.ensureDir(DATA_DIR);
@@ -43,7 +44,8 @@ export async function importRatings(): Promise<void> {
 
     // Process and import the data
     console.log("Importing ratings to database...");
-    await importRatingsToDatabase(EXTRACTED_FILE_PATH);
+    const count = await importRatingsToDatabase(EXTRACTED_FILE_PATH);
+    writeHealthMeta(count);
     console.log("Import completed");
 
     // Clean up files
@@ -116,7 +118,7 @@ async function extractGzFile(
   });
 }
 
-async function importRatingsToDatabase(filePath: string): Promise<void> {
+async function importRatingsToDatabase(filePath: string): Promise<number> {
   const db = new Database(DB_PATH);
 
   // Begin transaction for better performance
@@ -171,6 +173,8 @@ async function importRatingsToDatabase(filePath: string): Promise<void> {
     // Commit transaction
     db.exec("COMMIT");
     console.log(`Total ratings imported: ${count}`);
+
+    return count;
   } catch (error) {
     // Rollback transaction on error
     db.exec("ROLLBACK");
@@ -178,6 +182,14 @@ async function importRatingsToDatabase(filePath: string): Promise<void> {
   } finally {
     db.close();
   }
+}
+
+function writeHealthMeta(count: number) {
+  const meta = {
+    lastUpdated: new Date().toISOString(),
+    recordCount: count,
+  };
+  fs.writeFileSync(HEALTH_FILE, JSON.stringify(meta, null, 2), "utf-8");
 }
 
 // Allow running directly from command line
