@@ -1,7 +1,8 @@
 import express from "express";
+import path from "path";
+import dotenv from "dotenv";
 import { getHealth, getRatingById } from "../controllers/ratings.controller.js";
 import { rateLimiter } from "../middleware/rate-limiter.js";
-import dotenv from "dotenv";
 
 const router = express.Router();
 
